@@ -181,6 +181,24 @@ resource "aws_elastic_beanstalk_environment" "beanstalk_environment" {
 
   setting {
     namespace = "aws:autoscaling:trigger"
+    name      = "BreachDuration"
+    value     = "${var.autoscale_breach_duration}"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "Period"
+    value     = "${var.autoscale_period}"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "EvaluationPeriods"
+    value     = "${var.evaluation_periods}"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
     name      = "MeasureName"
     value     = "${var.autoscale_measure_name}"
   }

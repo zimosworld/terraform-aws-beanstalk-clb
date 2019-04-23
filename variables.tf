@@ -184,6 +184,21 @@ variable "availability_zones" {
   description = "Choose the number of AZs for your instances."
 }
 
+variable "autoscale_breach_duration" {
+  default     = "3"
+  description = "Amount of time, in minutes, a metric can be beyond its defined limit (as specified in the UpperThreshold and LowerThreshold) before the trigger fires."
+}
+
+variable "autoscale_period" {
+  default     = "3"
+  description = "Specifies how frequently Amazon CloudWatch measures the metrics for your trigger. The value is the number of minutes between two consecutive periods."
+}
+
+variable "evaluation_periods" {
+  default     = "1"
+  description = "The number of consecutive evaluation periods used to determine if a breach is occurring."
+}
+
 variable "autoscale_measure_name" {
   default     = "CPUUtilization"
   description = "Metric used for your Auto Scaling trigger. [CPUUtilization, NetworkIn, NetworkOut, DiskWriteOps, DiskReadBytes, DiskReadOps, DiskWriteBytes, Latency, RequestCount, HealthyHostCount, UnhealthyHostCount, TargetResponseTime]"
