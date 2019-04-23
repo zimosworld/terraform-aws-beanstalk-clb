@@ -1,5 +1,5 @@
 module "aws_iam_ec2_profile" {
-  source = "git::https://github.com/zimosworld/terraform-aws-iam-ebs-ec2.git?ref=tags/0.1.1"
+  source = "git::https://github.com/zimosworld/terraform-aws-iam-ebs-ec2.git?ref=tags/0.2.0"
 
   name = "${var.name}"
 }
