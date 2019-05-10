@@ -567,3 +567,17 @@ variable "max_execution_time" {
   default     = "60"
   description = "Sets the maximum time, in seconds, a script is allowed to run before it is terminated by the environment."
 }
+
+#--------------------------------------------------------------
+# Beanstalk DNS
+#--------------------------------------------------------------
+variable "zone_id" {
+  description = "Zone ID to add DNS records in, if empty no records will be added"
+  default     = ""
+}
+
+variable "zone_records" {
+  description = "Zone records to add to point to beanstalk"
+  type        = "list"
+  default     = []
+}

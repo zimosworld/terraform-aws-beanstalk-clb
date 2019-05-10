@@ -1,9 +1,21 @@
+#--------------------------------------------------------------
+#
+# Beanstalk with Classic Load Balancer
+#
+#--------------------------------------------------------------
+
+#--------------------------------------------------------------
+# EC2 IAM
+#--------------------------------------------------------------
 module "aws_iam_ec2_profile" {
   source = "git::https://github.com/zimosworld/terraform-aws-iam-ebs-ec2.git?ref=tags/0.2.0"
 
   name = "${var.name}"
 }
 
+#--------------------------------------------------------------
+# Beanstalk IAM
+#--------------------------------------------------------------
 module "aws_iam_ebs_role" {
   source = "git::https://github.com/zimosworld/terraform-aws-iam-ebs-service.git?ref=tags/0.1.1"
 
@@ -11,6 +23,9 @@ module "aws_iam_ebs_role" {
   enhanced_reporting_enabled = "${var.enhanced_reporting_enabled}"
 }
 
+#--------------------------------------------------------------
+# Beanstalk
+#--------------------------------------------------------------
 data "aws_elastic_beanstalk_solution_stack" "default" {
   most_recent = true
 
@@ -552,5 +567,25 @@ resource "aws_elastic_beanstalk_environment" "beanstalk_environment" {
   #===================== Tags =====================#
 
   tags = "${var.tags}"
+}
+
+#--------------------------------------------------------------
+# Beanstalk DNS
+#--------------------------------------------------------------
+data "aws_elastic_beanstalk_hosted_zone" "current" {}
+
+resource "aws_route53_record" "beanstalk" {
+
+  count = "${var.zone_id == "" ? 0 : length(var.zone_records)}"
+
+  name    = "${var.zone_records[count.index]}"
+  type    = "A"
+  zone_id = "${var.zone_id}"
+
+  alias {
+    name                   = "${aws_elastic_beanstalk_environment.beanstalk_environment.cname}"
+    zone_id                = "${data.aws_elastic_beanstalk_hosted_zone.current.id}"
+    evaluate_target_health = true
+  }
 }
 
