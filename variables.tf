@@ -36,6 +36,41 @@ variable "version_label" {
   description = "Elastic Beanstalk Application version to deploy."
 }
 
+#--------------------------------------------------------------
+# EC2 IAM
+#--------------------------------------------------------------
+
+variable "eb2_iam_name" {
+  description = "Name of an instance profile. Leave empty for one to be created."
+  default     = ""
+}
+
+variable "ec2_policies" {
+  default = [
+    "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker",
+    "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier",
+    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+    "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  ]
+}
+
+#--------------------------------------------------------------
+# Beanstalk Service IAM
+#--------------------------------------------------------------
+
+variable "beanstalk_iam" {
+  description = "Name of an IAM role that Elastic Beanstalk will use. Leave empty for one to be created."
+  default     = ""
+}
+
+variable "beanstalk_policies" {
+  default = [
+    "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth",
+    "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService"
+  ]
+}
+
 #===================== Software =====================#
 
 variable "enable_log_publication_control" {
@@ -58,9 +93,9 @@ variable "logs_retention_in_days" {
   description = "The number of days to keep log events before they expire."
 }
 
-variable "env_variables" {
+variable "env_vars" {
   default     = {}
-  type        = "map"
+  type        = map(string)
   description = "Map of custom environment variables to be provided to the application running on Elastic Beanstalk, e.g. `env_vars = { environment = 'production' debug = 'false' }`"
 }
 
@@ -87,7 +122,7 @@ variable "root_volume_size" {
 }
 
 variable "security_groups" {
-  type        = "list"
+  type        = list(string)
   default     = []
   description = "Lists the Amazon EC2 security groups to assign to the EC2 instances in the Auto Scaling group in order to define firewall rules for the instances"
 }
@@ -95,71 +130,6 @@ variable "security_groups" {
 variable "ssh_source_restriction" {
   default     = "0.0.0.0/0"
   description = "Used to lock down SSH access to the EC2 instances."
-}
-
-variable "env_app_env" {
-  default     = "production"
-  description = ""
-}
-
-variable "env_1_key" {
-  default     = "env_1"
-  description = ""
-}
-
-variable "env_1_value" {
-  default     = ""
-  description = ""
-}
-
-variable "env_2_key" {
-  default     = "env_2"
-  description = ""
-}
-
-variable "env_2_value" {
-  default     = ""
-  description = ""
-}
-
-variable "env_3_key" {
-  default     = "env_3"
-  description = ""
-}
-
-variable "env_3_value" {
-  default     = ""
-  description = ""
-}
-
-variable "env_4_key" {
-  default     = "env_4"
-  description = ""
-}
-
-variable "env_4_value" {
-  default     = ""
-  description = ""
-}
-
-variable "env_5_key" {
-  default     = "env_5"
-  description = ""
-}
-
-variable "env_5_value" {
-  default     = ""
-  description = ""
-}
-
-variable "env_6_key" {
-  default     = "env_6"
-  description = ""
-}
-
-variable "env_6_value" {
-  default     = ""
-  description = ""
 }
 
 #===================== Capacity =====================#
@@ -461,7 +431,8 @@ variable "enable_managed_actions" {
 }
 
 variable "preferred_start_time" {
-  default     = "Tue:15:15"
+  default = "Tue:15:15"
+
   #Wednesday 2:15am +1100 GMT
   description = "Configure a maintenance window for managed actions in UTC"
 }
@@ -510,7 +481,7 @@ variable "elb_scheme" {
 }
 
 variable "public_subnets" {
-  type        = "list"
+  type        = list(string)
   default     = []
   description = "The IDs of the subnet or subnets for the elastic load balancer."
 }
@@ -521,7 +492,7 @@ variable "associate_public_ip_address" {
 }
 
 variable "private_subnets" {
-  type        = "list"
+  type        = list(string)
   default     = []
   description = "The IDs of the Auto Scaling group subnet or subnets."
 }
@@ -531,7 +502,7 @@ variable "private_subnets" {
 #===================== Tags =====================#
 
 variable "tags" {
-  type        = "map"
+  type        = map(string)
   default     = {}
   description = "Additional tags (e.g. `tags = { application_type = 'website' environment = 'production' }"
 }
@@ -578,6 +549,7 @@ variable "zone_id" {
 
 variable "zone_records" {
   description = "Zone records to add to point to beanstalk"
-  type        = "list"
+  type        = list(string)
   default     = []
 }
+

@@ -1,5 +1,7 @@
 Terraform module to provision AWS Elastic Beanstalk environment with a classic load balancer.
 
+NOTE: This requires terraform version >= 0.12
+
 ## Module Inputs
 
 | Name | Description | Type | Default | Required |
