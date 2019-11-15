@@ -128,7 +128,7 @@ resource "aws_elastic_beanstalk_environment" "beanstalk_environment" {
   }
 
   dynamic "setting" {
-    for_each = "${var.env_vars}"
+    for_each = var.env_vars
 
     content {
       namespace = "aws:elasticbeanstalk:application:environment"
